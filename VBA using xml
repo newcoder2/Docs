@@ -1,0 +1,279 @@
+Excel VBA, Get Data From Web Using MSXML
+Sep 02, 2015 by azurous in Excel 
+Previously in the article below I’ve explained how you can get data from the web using query tables in VBA:
+•	Excel VBA, Retrieving Data From a Website Using a Query Table
+The problem with using Query Tables, is that they are slow. A faster method would be using the MSXML object. The downside of using the MSXML object is that you can’t use it on any site. The MSXML object is actually used to connect to an XML file. In this article I will briefly explain how the MSXML object can be used to get data from the internet. For a more in depth explanation about the MSXML object please see the link below:
+•	Microsoft MSDN, A Beginner’s Guide to the XML DOM
+Some websites offer an API. This API is basically an XML file. For example lets say you want to build an application that can get the exchange rate for different currencies. There are many sites offering an API to the different currency exchange rates, most of them require a subscription. You can find them by googling the term “Forex API”. Or for example lets say you want your program to connect to the internet and get the current time and date. google the term “Time API” and again you will see a list of sites offering an API that provides the current date and time.
+–
+________________________________________
+API’s, What are They?
+In start of the article I mentioned the MSXML object can be used to get data from APIs on the web. But what are these APIs? I’m not going to get into the technical details, but basically an API is an XML file. It will look something like this:
+ 
+As you can see the API has the following structure. There is a Query tag, then a Result tag inside it, then several Rate tags. Each Rate tage has 6 different tags. You can see the structure of this API below:
+•	Query 
+o	  results 
+	rate 
+	Name
+	Rate
+	Date
+	Time
+	Ask
+	Bid
+	rate 
+	Name
+	Rate
+	Date
+	Time
+	Ask
+	Bid
+	rate 
+	Name
+	Rate
+	Date
+	Time
+	Ask
+	Bid
+–
+________________________________________
+RSS Feeds:
+RSS feeds are also an XML file and therefor you can connect to them using the MSXML object. The figure below shows the RSS feed to my blog:
+ 
+As you can see (similar to the API in the previous section), the RSS Feed consists of several different tags.
+–
+________________________________________
+Connecting to the Web:
+Once you have the URL of the webpage you can connect to it using the methods below:
+Method 1, Late Binding:
+Sub Example1()
+Dim xmlOBject As Object
+'create msxml object 
+Set xmlOBject = CreateObject("MSXML2.DOMDocument.5.0")
+xmlOBject.async = False
+'load the xml page 
+xmlOBject.Load ("http://software-solutions-online.com/feed/")
+End Sub 
+The line below creates the MSXML object:
+Set xmlOBject = CreateObject("MSXML2.DOMDocument.5.0")
+If the async property is set to false, the program will wait for the XML file to load before executing the next line. If its set to true, the program will continue execution even if the XML file has not been loaded. By default the async property is set to true, which may lead to errors if the XML file hasn’t finished loading and we try to access it:
+xmlOBject.async = False
+The last line loads the webpage with the XML API:
+xmlOBject.Load ("http://software-solutions-online.com/feed/")
+Method 2:
+Another method would be using early binding, in this method a reference must be created to one of the Microsoft XML Libraries:
+ 
+We could then use a code similar to the one below to connect to the XML file:
+Sub Example2()
+Dim xmlOBject As MSXML2.DOMDocument50
+'create msxml object 
+Set xmlOBject = New MSXML2.DOMDocument50
+xmlOBject.async = False
+'load the xml page 
+xmlOBject.Load ("http://software-solutions-online.com/feed/")
+End Sub 
+–
+________________________________________
+Getting Data Using the MSXML Object:
+So now that we have connected to a webpage with an API, how can we get the data we are after? Consider the first example where we were trying to get data from the page USD Forex API. Below I have brought the XML on that page:
+<query xmlns:yahoo="http://www.yahooapis.com/v1/base.rng" yahoo:count="4" yahoo:created="2014-06-16T07:08:22Z" yahoo:lang="en-US">
+< results>
+< rate id="USDEUR">
+< Name>USD to EUR</Name>
+< Rate>0.7388</Rate>
+< Date>6/16/2014</Date>
+< Time>3:07am</Time>
+< Ask>0.7389</Ask>
+< Bid>0.7387</Bid>
+< /rate>
+< rate id="USDJPY">
+< Name>USD to JPY</Name>
+< Rate>101.845</Rate>
+< Date>6/16/2014</Date>
+< Time>3:07am</Time>
+< Ask>101.87</Ask>
+< Bid>101.82</Bid>
+< /rate>
+< rate id="USDBGN">
+< Name>USD to BGN</Name>
+< Rate>1.4445</Rate>
+< Date>6/16/2014</Date>
+< Time>3:03am</Time>
+< Ask>1.4495</Ask>
+< Bid>1.4395</Bid>
+< /rate>
+< rate id="USDCZK">
+< Name>USD to CZK</Name>
+< Rate>20.2855</Rate>
+< Date>6/16/2014</Date>
+< Time>3:07am</Time>
+< Ask>20.29</Ask>
+< Bid>20.281</Bid>
+< /rate>
+< /results>
+< /query>
+< !-- total: 243 -->
+< !-- engine2.yql.ne1.yahoo.com -->
+Let’s say we want the bid value of the USD to BGN. This has been highlighted above.
+The xmlObject object consists of nodes. Each node may consist of several child nodes. Each node represents a tag and the value the tag contains. One method for getting the bid value is to manually go through the nodes until the required node is found. This method is explained in Method 1.
+Another method would be to programmatically iterate through the nodes until the required Node is found. This is explained in Method 2.
+Method 1:
+Step 1:
+Copy the following code to the VBA Editor:
+Private Sub Example3()
+Dim strPath As String 
+Dim xmlOBject As MSXML2.DOMDocument50
+Set xmlOBject = New MSXML2.DOMDocument50
+'website path 
+strPath = "http://query.yahooapis.com/v1/public" & _
+    "/yql?q=select%20%2a%20from%20yahoo.finance." & _ 
+    "xchange%20where%20pair%20in%20%28%22USDEUR%22," & _ 
+    "%20%22USDJPY%22,%20%22USDBGN%22,%20%22USDCZK%22" & _ 
+    "%29&env=store://datatables.org/alltableswithkeys" 
+     
+xmlOBject.async = False
+xmlOBject.Load (strPath)
+End Sub 
+Step 2:
+Add the xmlObject object to the watch.
+Step 3:
+Create a breakpoint after the last line of code:
+ 
+Step 4:
+Run the program.
+Step 5:
+Open the ChildNodes of the  xmlObject variable:
+ 
+As you can see the First Child Node of the xmlObject variable contains several Items. Each of these items are itself a Node. Basically what we are trying to do is to go through all the nodes until we find the node that contains the USD to BGN Exchange Rate Bid price. This value is contained within a Bid tag. The Bid tag is contained within a Rate tag. The Rate tag is within a Result tag and that is within the Query tag:
+•	Bid
+•	Rate
+•	Results
+•	Query
+So we need to work our way from the top Node (Query) down to the Bid node with the USD to BGN exchange rate.
+Step 6:
+As mentioned in the previous step in the XML Page the highest level tag is the Query Tag:
+ 
+So basically what we need to find is the Query node. By going through the child nodes you will see that the Query Tag is stored in the second node:
+ 
+Step 7:
+Repeat steps 5 and 6 for the current node. That would mean opening the ChildNodes of the current node and looking for the Node which contains the Result Tag.
+It can be seen from the figure below that there is only one node in the Query Node and that is the Result node:
+ 
+Step 8: 
+Repeat step 7 to find the Rate Node that has the USD to BGN Exchange rate. This is stored within the 3rd Child Node:
+ 
+Step 9:
+Repeat step 7 to find the Node which contains the Bid data. This is stored in the 6th child node:
+ 
+As you can see the value of the USD to BGN exchange rate is contained within the nodeTypedValue variable of this Child Node:
+ 
+Step 10:
+Probably wondering why we went through all those previous steps? By going through all those steps we now know that the value we are after can be found:
+1.	In the NodeTypeValue variable of the final Bid Node
+2.	The Bid Node itself is the 6th Node of the Rate Node
+3.	The Rate Node is the 3rd Node of the Result Node
+4.	The Result Node is the 1st Node of the Query Node
+5.	The Query Node is the 2nd Node of the xmlObject object.
+Keeping in mind that child node collections are zero based (therefore the first node has the index zero “0”) we can reference the USD to BGN Exchange rate using the code below:
+Private Sub Example4()
+Dim strPath As String 
+Dim dblRate As Double 
+Dim xmlOBject As MSXML2.DOMDocument50
+Set xmlOBject = New MSXML2.DOMDocument50
+'website path 
+strPath = "http://query.yahooapis.com/v1/public" & _
+    "/yql?q=select%20%2a%20from%20yahoo.finance." & _ 
+    "xchange%20where%20pair%20in%20%28%22USDEUR%22," & _ 
+    "%20%22USDJPY%22,%20%22USDBGN%22,%20%22USDCZK%22" & _ 
+    "%29&env=store://datatables.org/alltableswithkeys" 
+    
+xmlOBject.async = False
+xmlOBject.Load (strPath)
+'get the exchange rate value 
+dblRate = xmlOBject.ChildNodes.Item(1).ChildNodes.Item(0 _
+    ).ChildNodes.Item(2).ChildNodes.Item(5).nodeTypedValue 
+End Sub 
+Method 2:
+As explained in the previous method we are after the Bid tag (Node) with the USD to BGN exchange rate. This Bid tag (Node) is inside a Rate tag which has a Name tag with the value “USD to BGN”.
+The Rate tag itself is inside the Results tag, which it is inside the Query tag:
+•	Bid
+•	Rate
+•	Results
+•	Query
+This can be achieved using the code below:
+Sub Example5()
+Dim strPath As String 
+Dim dblRate As Double 
+Dim i As Integer 
+Dim xmlNode As MSXML2.IXMLDOMNode
+Dim xmlOBject As MSXML2.DOMDocument50
+Dim intLength As Integer 
+Set xmlOBject = New MSXML2.DOMDocument50
+'website path 
+strPath = "http://query.yahooapis.com/v1/public" & _
+    "/yql?q=select%20%2a%20from%20yahoo.finance." & _ 
+    "xchange%20where%20pair%20in%20%28%22USDEUR%22," & _ 
+    "%20%22USDJPY%22,%20%22USDBGN%22,%20%22USDCZK%22" & _ 
+    "%29&env=store://datatables.org/alltableswithkeys" 
+    
+xmlOBject.async = False
+xmlOBject.Load (strPath)
+
+'get the query node 
+intLength = xmlOBject.ChildNodes.Length - 1
+For i = 0 To intLength
+    If xmlOBject.ChildNodes.Item(i).BaseName = "query" Then 
+        Set xmlNode = xmlOBject.ChildNodes.Item(i) 
+        i = intLength + 1 
+    End If 
+Next i
+'get the result node 
+intLength = xmlNode.ChildNodes.Length - 1
+For i = 0 To intLength
+    If xmlNode.ChildNodes.Item(i).BaseName = "results" Then 
+        Set xmlNode = xmlNode.ChildNodes.Item(i) 
+        i = intLength + 1 
+    End If 
+Next i
+'get the rate node 
+intLength = xmlNode.ChildNodes.Length - 1
+For i = 0 To intLength
+    If xmlNode.ChildNodes.Item(i).ChildNodes.Item(0).ChildNodes.Item(0).Text = "USD to BGN" Then 
+        Set xmlNode = xmlNode.ChildNodes.Item(i) 
+        i = intLength + 1 
+    End If 
+Next i
+dblRate = xmlNode.ChildNodes.Item(5).nodeTypedValue
+End Sub 
+The code below loops through the top level nodes (tags) looking for the query node (tag):
+'get the query node 
+intLength = xmlOBject.ChildNodes.Length - 1
+For i = 0 To intLength
+    If xmlOBject.ChildNodes.Item(i).BaseName = "query" Then 
+        Set xmlNode = xmlOBject.ChildNodes.Item(i) 
+        i = intLength + 1 
+    End If 
+Next i
+The next block of code loops through the child nodes in the query node searching for the results node:
+'get the result node 
+intLength = xmlNode.ChildNodes.Length - 1
+For i = 0 To intLength
+    If xmlNode.ChildNodes.Item(i).BaseName = "results" Then 
+        Set xmlNode = xmlNode.ChildNodes.Item(i) 
+        i = intLength + 1 
+    End If 
+Next i
+The last block of code searches the child nodes of the results node (rate nodes). It searches for the rate node that contains the USD to BGN exchange rate:
+'get the rate node 
+intLength = xmlNode.ChildNodes.Length - 1
+For i = 0 To intLength
+    If xmlNode.ChildNodes.Item(i).ChildNodes.Item(0).ChildNodes.Item(0).Text = "USD to BGN" Then 
+        Set xmlNode = xmlNode.ChildNodes.Item(i) 
+        i = intLength + 1 
+    End If 
+Next i
+You can download the file and code used in this article from the link below:
+•	MSXML.xlsm
+See also:
+•	Excel VBA, Retrieving Data From a Website Using a Query Table
+If you need assistance with your code, or you are looking for a VBA programmer to hire feel free to contact me. Also please visit my website  www.software-solutions-online.com
+
