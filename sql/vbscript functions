@@ -1,0 +1,244 @@
+Classification of VBScript Function Library
+For the ease of understanding, we will divide the entire VBScript function library that we use in QTP into following four types -
+ 
+Let’s now start with VBScript string manipulation functions that we use in QTP.
+Len Function
+Purpose: This function can be used in QTP to find the length of a string. That is, this VBScript function finds out the number of characters present in a string.
+Syntax: Len(string)
+With this function, you can directly pass a string as an argument or you can pass a variable also.
+Example: Let us suppose that you want to create a random number in QTP of length 6. Let’s see how Len function can be used here. The below sample script shows some generic examples as well as the real life example (discussed above) on how you can use Len function.
+
+	'========== Generic Example ==========
+'Use string in Len function
+msgbox Len("automation repository") 'msgbox displays value 21
+ 
+'Using a variable as a parameter in Len function
+sVar = "automation repository"
+msgbox Len(sVar) 'msgbox displays value 21
+'
+'
+'========== Real Life Scenario ==========
+'Find Random Number of length 6
+Randomize
+iTmp = Int((999999 * Rnd) + 1)
+ 
+'Find the Length of iTmp
+iLen = Len(iTmp)
+ 
+'Add trailing zeros at the end of random number in case the Length is less that 6
+iRandomNumber = iTmp * (10^(6 - iLen))
+In the above example, you would see that the function Rnd returns a value that is between 0 and 1. That is, the value returned can be 0.5, 0.038, 0.00046 and so on. So when we get the random number, its length can be 6 or less than 6. If the length is less that 6 (which we find out using Len function), we can then append zero’s at the end of the random number to get a 6 digit number.
+LCase Function
+Purpose: Using LCase function, you can convert all the characters in a string into lowercase. For example, LCase function will convert “AuTOmATioN-1234″ to “automation-1234″. You can see here that it is not necessary that the string you want to use should have characters only. This function just converts the upper case letters to lower case and ignores the rest of the characters, numbers etc.
+Syntax: LCase(string)
+Example: Consider a scenario where you have to perform some action based on some user input. If the user input is “Yes”, then you need to perform the action, else you don’t. Now, it is not necessary that the user will always provide the value “Yes”. User input can be “YES”, “yes”, “yEs” and so on. Also please keep in mind that in VBScript, “Yes” is not equal to “YES”. Let’s see how this can be done in normal way and how LCase function can simplify your job in this scenario.
+
+	'========== Normal Method ==========
+sUserInput = {Get user input}
+ 
+'Check if user input is yes or not
+If sUserInput = "Yes" or sUserInput = "yes" or sUserInput = "YES" or sUserInput = "YEs" Then ' and so on........
+   'Do the required action
+End If
+ 
+'
+'
+'========== Use LCase Method ==========
+sUserInput = {Get user input}
+ 
+If LCase(sUserInput) = "yes" Then 'LCase will convert all the possible combinations to lower case
+   'Do the required action
+End If
+
+UCase Function
+Purpose: You can use VBScript UCase function to convert all the characters in a string to uppercase. This function works the same way as LCase function, the only difference being that it will convert the characters into uppercase. For example – this function will convert “auTOmaTion+123″ to “AUTOMATION+123″.
+Syntax: UCase(string)
+Example: This function can also be used for the same scenario that we discussed for LCase function.
+
+	sUserInput = {Get user input}
+ 
+If UCase(sUserInput) = "YES" Then
+   'Do the required action
+End If
+
+Trim, LTrim and RTrim Functions
+Purpose: In QTP, Trim function can be used to remove the blank spaces from the beginning and end of a string. For example, Trim(” automation repository “) would return “automation repository”. So here, the function Trim removed all the blank spaces from the beginning and end of the string.
+LTrim (can also be called Left Trim) function removes the blank spaces from the left, ie the beginning of the string. So LTrim(” automation repository “) would return “automation repository ”
+You can use RTrim (also called Right Trim) function in QTP remove the blank spaces from the right side or the end of the string. RTrim(” automation repository “) would return ” automation repository”
+Syntax: Trim(string), LTrim(string), RTrim(string)
+Example: Many a times, when you extract some value from a WebElement or a table cell, you would notice that the string that you have extracted may contain leading or trailing blank spaces. Now, if you don’t remove these spaces from the string and compare this string with some value, the script would not match the strings because of the blank spaces. So in such situations you would need to use VBScript Trim function.
+The below example shows the sample code where you need to compare the value from a WebElement with some value from the data sheet.
+
+	Dim iDataFromApplication, iDataFromDataSheet
+ 
+'Retrieve both the values
+iDataFromDataSheet = fnGetDataFromDataSheet() 'Some function to get data from data sheet
+iDataFromApplication = Browser("Brw").Page("Pg").WebElement("WebEl").GetROProperty("innertext")
+ 
+'Compare the values
+If Trim(iDataFromApplication) = iDataFromDataSheet Then
+   Reporter.ReportEvent micPass, "Passed", "Values Match"
+Else
+   Reporter.ReportEvent micFail, "Failed", "Values DONT Match"
+End If
+Now most of the times, we use the Trim function just as a precautionary step to make sure that the string doesn’t contain any leading or trailing spaces. So it makes sense to check for the presence of spaces both at the beginning and end of string. Because of this reason, you would notice that you would be using Trim function at many places but LTrim and RTrim would be used only in rare scenarios.
+InStr Function
+Purpose: InStr is one of the most common string manipulation functions that you would be using in QTP. InStr function helps you determine if a smaller string is present in a bigger string or not. For example, you can use this function to determine if the string “Test” (smaller string) is present in “QuickTest” (bigger string).
+If a match is found, this functions returns a number that represents the position at which the match is found. For example, if you use InStr to search if “tom” is present in “automation”, the function InStr would return the value 3 (which is the starting position of “tom”). So all we need to do here is to check the return value. If it is a number greater than 0 that means the match is found.
+Syntax: InStr(Start(optional), BigString, SmallString, Compare(optional))
+•	Start is an optional argument which specifies the position from where the search should start in the BigString. If this value is not provided, the search would start from first character.
+•	BigString is the string in which you will search for the smaller string.
+•	SmallString is the string which will be searched in the bigger or main string.
+•	Compare is an optional argument which specifies the type of search. Value 0 means binary comparison and value 1 means text comparison.
+Example: Let’s understand this with the help of few examples.
+
+	sBigString = "Automation Repository"
+sSmallString = "on Rep"
+ 
+'Start match from 1st character
+iReturnVal = InStr(1, sBigString, sSmallString, 1) 'iReturnVal will contain the value 9
+ 
+'Start match from 11th character
+iReturnVal = InStr(11, sBigString, sSmallString, 1)
+'From the above statement iReturnVal will have value 0 because we are matching from 11th character.
+'So effectively, we are trying to find "on Rep" in "Repository"
+ 
+'Start match from 1st character without specifying the 1st argument
+sSmallString2 = "Auto"
+iReturnVal = InStr(sBigString, sSmallString2) 'iReturnVal will contain the value 1
+Please note that, if you have omitted the 1st argument, you would need to omit the last argument also. Omitting the first argument and keeping the last one will give you an error.
+Real Life Example: The above example was just to show the basic working of this function. But in real life scenarios, you would mostly be verifying if a string is available inside another string or not. Let’s see an example for this.
+Imagine you are automating a web application where you have the functionality to send emails also. You have to send an email and verify if success message was displayed or not. The below image shows the success and failure message.
+ 
+From the above figure, you can note that when the email is sent successfully, the applications shows the message – “Email Successfully Sent to – {some email id}”. Here, the mail ids can change but the message before that remains same. So in your QTP script, you can use the InStr function to verify if the message is displayed or not.
+
+	sMessageFromApplication = Browser("Brw").Page("Pg").WebElement("WebEl").GetROProperty("innertext")
+ 
+'Check if the mail is successfully displayed or not
+If InStr(sMessageFromApplication, "Email Successfully Sent to") <> 0 Then
+   Reporter.ReportEvent micPass, "Pass", "Email Sent Successfully"
+Else
+   Reporter.ReportEvent micFail, "Fail", "Email NOT sent"
+End If
+
+Split Function
+Purpose: This is another very common string manipulation function that you would find yourself using very often in your QTP Scripts. This function splits a string using a delimiter and returns a number of sub-strings stored in an array. For example, if you want to split the string “QuickTest Professional” using ” ” (blank space) as a delimiter, the split function would return 2 sub-strings – “QuickTest” and “Professional”. Both these sub-strings will be stored in an array. The first sub-string in index 0 of the array and the second sub-string in index 1 of the array.
+Syntax: Split(String, Delimiter(optional), Count(optional), Compare(optional))
+•	String is the text that you want to split.
+•	Delimiter is the character or string using which you want to split the main string. If omitted, the space character (” “) is taken as the delimiter.
+•	Count is the number of sub-strings that you want the function to return. The value -1 means that all the sub-strings will be returned.
+•	Compare indicates the kind of sub-strings used while evaluating sub-strings. Value 0 indicates binary comparison and value 1 indicates textual comparison.
+Example: Let’s see some examples to understand this function clearly.
+
+	sText = "Yes,No,Maybe"
+sDelimiter = "," 'Delimiter is comma (,)
+ 
+'Split the text using the delimiter. 'arrArray' is the array in which the fucntion Split will store the sub-strings
+arrArray = Split(sText, sDelimiter)
+'arrArray(0) contains the value Yes. arrArray(1) contains the value No and  arrArray(2 contains the value Maybe
+ 
+'Display the sub-strings in a msgbox
+iLoop = UBound(arrArray) 'Find trhe size of the array
+For i = 0 to iLoop
+   msgbox arrArray(i)
+Next
+ 
+'
+'Split the text using the delimiter but specify the count of the sub-strings
+arrArray1 = Split(sText, sDelimiter, 2)
+'Since we have specified the count of sub-strings as 2, arrArray1(0) will have Yes and arrArray1(1) will have the value No,Maybe
+ 
+'Display the sub-strings in a msgbox
+iLoop1 = UBound(arrArray1) 'Find trhe size of the array
+For i = 0 to iLoop1
+   msgbox arrArray1(i)
+Next
+Real Life Example of Split function in QTP. There is a very common scenario where you would be using the Split function in your QTP scripts. Consider a situation where you have a drop down field in an application and you want to find out if a particular value is available in the drop down or not. This task can be performed using the split function. If you spy on a drop down field, you would notice that it has a property called “all items”. This property contains all the items in the drop-down separated mostly by a semi-colon(;).
+ 
+The above figure shows a drop down field with all its items. The “all items” property for this drop down field will have this value – “Red;Green;Blue;Orange;Yellow”. Now your task is to find out if the value ‘Orange’ is available in that list or not. Let’s see how this can be accomplished.
+
+	'Get the list of all the items in the drop down field
+sAll_Items = Browser("Brw").Page("Pg").WebList("WebL").GetROProperty("all items")
+ 
+'Split the string using ; as the delimiter
+arrItems = Split(sAll_Items, ";")
+iItemCount = UBound(arrItems)
+ 
+'Check if the item 'Orange' is available in the list or not
+flValueFound = False
+For i=0 to iItemCount
+   If arrItems(i) = "Orange" Then
+      flValueFound = True
+      Exit For
+   End If
+Next
+ 
+'Report the Result
+If flValueFound = True Then
+   Reporter.ReportEvent micPass, "Pass", "Value found in the WebList"
+Else
+   Reporter.ReportEvent micFail, "Failed", "Value NOT found in the WebList"
+End If
+
+Left Function
+Purpose: In QTP, you can use the Left function to find out a specified number of characters from the left of a string. For example, if you want to find the first 2 characters in the string “QuickTest Pro”, the Left function would return the value “Qu”.
+Syntax: Left(String, Length) where String is the actual string and Length is the number of characters you want to find.
+Example: Let’s see the example of Left function.
+
+	Dim sMainString, sLeftString
+sMainString = "Orange"
+sLeftString = Left(sMainString, 2) 'Get the first two characters from the left of the string
+msgbox sLeftString 'Displays the value "Or"
+
+Right Function
+Purpose: The Right function works the same way as Left function with the only difference being that the Right function retrieves the specified characters from the right side of the string. So, if you want to find the 3 right characters in the string “VBScript”, the function Right will return the value “ipt”.
+Syntax: Right(String, Length)
+Example: A very good place where you can use the Right function is the GMail Inbox. Let us suppose that your task is to find out the number of emails that are delivered to you in GMail today. If you observe the GMail inbox, you would notice that all the mails delivered today will have the time in “am” or “pm” at the end. All other mails will have a date at the end. Refer the below image for screenshot.
+ 
+From this, you can easily make out that you have to find the text from each row and then use the Right function to find out the last 2 characters. If the last 2 characters is “am” or “pm” then that mail is delivered today. Let’s see the code for this.
+
+	'Search for emails received today in your inbox
+'Logic - The mails received today will have only time in the last(8th) column.
+'Time is always followed by am or pm. So the code check for the last 2 characters and matches it with am or pm.
+For iR = 1 to 50
+    sLastColumnText = Browser("Inbox").Page("Inbox").Frame("Frame").WebTable("Emails").GetCellData(iR,8)
+    sLast2Characters = Right(sLastColumnText, 2)
+    If sLast2Characters = "am" or sLast2Characters = "pm" Then
+        iTodayMails = iTodayMails + 1
+    Else
+        'Exit For
+    End If
+Next
+'Report the number of  mails received today
+Reporter.ReportEvent micPass, "Total Emails Received Today - " & iTodayMails, ""
+
+Mid Function
+Purpose: In QTP, Mid function can be used to retrieve a sub-string from a main string. For example, if you have a string like “VBScript”, you can use the mid function to extract sub-strings like “VBS”, “Script” etc.
+Syntax: Mid(String, Start, Length(optional))
+•	String is the actual string from which you want to extract a sub-string.
+•	Start is the starting position from where the sub-string should be extracted.
+•	Length is the length of the sub-string to be extracted. If omitted, all the characters from the Start value till the end of the main string are taken as part of the sub-string.
+Example: 
+
+	Dim sMainString, sSubString, sSubString1
+sMainString = "Orange"
+ 
+sSubString = Mid(sMainString, 3, 2) ' variable 'sSubString' will have the value 'an'
+ 
+sSubString1 = Mid(sMainString, 3) ' variable 'sSubString1' will have the value 'ange'
+Real Life Example of Mid Function in QTP. If you recall the example that we had used with InStr function above, we used the function to find if the email success message was delivered or not. Now let us assume that you want to find out the email id to which the mail was sent from the success message (“Email Successfully Sent to – anish@automationrepository.com”). Here you can see that the text before the email id is always fixed. So you can count the starting point. Also the length of the email id is not fixed. But it comes at the end of the string. So you can omit the Length parameter so that the sub-string that is returned contains the full email id.
+Few more functions
+Till now, we have covered only those VBScript string manipulation functions that you would be using very commonly in QTP. However, there are few more function which you would be using very rarely (or maybe not at all). Below is the list of these functions and a one liner explanation of each.
+InStrRev Function This function is similar to InStr function with the only difference being that it returns the position of the occurrence of a sub-string from the end of the string.
+Replace Function This function can be used to replace some sub-string within a main string with some other string. For example, if you have a string like “abaacaadea”, you can use the replace function to replace the character ‘a’ (or any sub-string) with any other character or sub-string.
+Space Function You can use the Space function in QTP to create a string with a given number of blank spaces. For example, var = Space(5) would return string – ” “, i.e. a string with 5 blank spaces.
+String Function You can use the String function to create a repeating character string of a specified length. str = String(5, “a”) would return the string – “aaaaa”.
+StrReverse Function StrReverse function in QTP can be used to create a reverse of a string. For example, str = StrReverse(“orange”) would return the string – “egnaro”.
+Join Function If you have a number of sub-strings in an array, you can use the Join function to concatenate all the sub-strings from the array into a single string.
+StrComp Function StrComp function can be used to compare two strings in QTP. You can choose to ignore this function because you can perform the same task of comparing the strings using comparison operators.
+Filter Function This function returns a zero-based array containing a subset of a string array based on a specified filter criteria.
+Practice Questions
+If you have thoroughly understood the string manipulation functions covered above, you can try to write programs for the below mentioned practice questions. This would help you get a good grasp of the concepts discussed above.
+•	1) Given a string, write a program that finds out all the characters that constitute the string. Example – If the string is VBScript, the output (using a msgbox) should be in this format – The string VBScript contains variables – V, B, S, c, r, i, p, t
+•	2) Write a program that mimics the functionality of LCase function. For example, your program should take any variable like “AuTOMatIon123_!@#” and convert all the upper case letter to lower case like “automation123_!@#”.
+•	3) Write a program that reverses the order of words (not characters) in a sentence. For example, the program should change the sentence “Good Morning Everybody” to “Everybody Morning Good”
