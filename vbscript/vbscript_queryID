@@ -1,0 +1,34 @@
+Enter file contents hereoption explicit
+'on error goto eGE:
+Dim oConn
+Dim oRS
+Dim N, oSQL
+
+Set oConn = createobject("ADODB.Connection")
+Set oRS = CreateObject  ("ADODB.Recordset")
+
+oConn.open "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = C:\Users\l.enriquez.rodriguez\Desktop\DB.accdb"
+'oRS.open "INSERT INTO Inventory(ComputerName, SerialNumber, UserName, Dept) VALUES ('atl-ws-07', 'A14B1234', 'Ken Myer', 'Finance')" & _
+',oConn, adOpenStatic, adLockOptimistic
+
+N = InputBox("Enter Nexus Number")
+oSQL = "SELECT * FROM OOS WHERE Nexus = " & "'" & N & "'"
+'msgbox  osql
+Set oRS = oConn.execute(oSQL)
+if oRS.EOF then
+	msgbox "Not Found"
+else
+	Do while NOT oRS.eof
+	msgbox "Release "& oRS.Fields(1) & vbcrlf & _
+	"Nexus: "& oRS.Fields(7) & vbcrlf & _
+	"Project: " & oRS.Fields(8) & vbcrlf & _
+	"TL: " & oRS.Fields(9) & vbcrlf & _
+	"Status: " & oRS.Fields(10)
+	'msgbox "Done"
+	oRS.MoveNext
+	Loop
+end if
+
+oConn.close
+set oConn = nothing
+set oRS = nothing
