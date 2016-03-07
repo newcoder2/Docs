@@ -1,0 +1,39 @@
+Dim oConn
+Dim oRS
+Dim N, oSQL
+Const adOpenStatic = 3
+Const adLockOptimistic = 3
+
+Set oConn = createobject("ADODB.Connection")
+Set oRS = CreateObject  ("ADODB.Recordset")
+
+oConn.open "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = C:\Users\l.enriquez.rodriguez\Desktop\DB.accdb"
+
+'N = InputBox("Enter the Release you are looking for." & vbcrlf & "i.e: May Release would be: 2016/05")
+'oSQL = "SELECT * FROM OOS WHERE Release = " & "'" & N & "'"
+
+'-------- INSERT RECORDS INTO THE TABLE
+oRS.Open "INSERT INTO Inventory (ComputerName, SerialNumber, UserName, Dept) VALUES ('atl-ws-07', '11234', 'Ken Myer', 'Finance')", oConn, adOpenStatic, adLockOptimistic
+MSGBOX "Record Inserted"
+
+'-------- CLEANING OBJECT
+set oRS = nothing
+MSGBOX "
+
+'-------- SETTING UP THE OBJECT FOR NEW QUERY
+set oRS = oConn.Execute ("SELECT * FROM Inventory")
+
+if oRS.EOF then
+	msgbox "Not Found"
+else
+	Do while NOT oRS.eof
+	msgbox "Release "& oRS.Fields(1) & vbcrlf & "Nexus: "& oRS.Fields(2) & vbcrlf & "Project: " & oRS.Fields(3) & vbcrlf & _
+	"TL: " & oRS.Fields(4) '& vbcrlf & "Status: " & oRS.Fields(5)
+	oRS.MoveNext
+	Loop
+end if
+
+oConn.close
+set oConn = nothing
+set oRS = nothing
+
