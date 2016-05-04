@@ -1,0 +1,37 @@
+Enter file contents here<< Requirements >>
+	--Customer Interface
+	--Business interface
+
+<< Customer Interface >>
+1. Login interface.
+	1.1 Sing up
+	1.2 Sign in
+	1.3 Finantial information.
+		1.3.1 CC Details.
+3. Search section
+	3.1 Menu (services & combos).
+	3.2 List of products or services.
+	3.3 Submition Form.
+		3.3.1 confirmation status sent back to business
+		3.3.2 email status sent back client & business 
+4. Business DB
+	4.1 Business details.
+		4.1.1 Location
+		4.1.2 Address
+
+<< Business Interface >>
+1. Loging interface
+	1.1 Sing up
+	1.2 Sign in
+	1.3 Financial information
+		1.3.1 CC details
+3. Orders Interface (Process)
+	3.1 Order Confirmation.
+		3.1.1 confirmation status sent back to client
+		3.1.2 email status sent back client
+	3.2 Order process.
+		3.2.1 confirmation status sent back to client
+		3.2.2 email status sent back client
+	3.3 Order completed.
+		3.3.1 confirmation status sent back to client
+		3.3.2 email status sent back client
