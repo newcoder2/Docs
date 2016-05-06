@@ -1,0 +1,116 @@
+Enter file contents here---- INTRO-----
+Functional Test Lead – Web Services
+•	As Near Shore team lead, he has been working on workload assignment for On/Near shores Test Leads.
+•	Hands on experience on Test planning, Test scripts, execution, data conditioning, peer reviews, defect tracking, RTM, Signoff.
+	 Creation of Functional Test Cases and execution as required.
+	Walkthrough of the test artifacts (Test Plan , Test scripts & Test Objectives)
+	Hosting meetings with shores to discuss execution status & road blocks and risk mitigation.
+
+•	Hands on experience on Impact analysis and Project Estimation – for several projects along with daily interaction with LOBs and resources managers.	
+	As part of this process he has created a tool for the Tracking & Engagement.
+
+Tracking & Engagement Tool - Development 
+ 	Tool created to improve the process of tracking & engagement followed by the Web Services testing team. 
+ 	In order to reduce the human error, the tool uses a Share Point Table as “DB” where all the details are recorded by only 2 resources. 
+ 	The information can be accessed by the Tracking Tool and displayed in a friendlier way 24x7: 
+•	The tool makes 3 different search types:  by Project ID, by Name or a word, & by Release among other functionalities. 
+•	The information handled in the table: Tracking comments, Developer & TDL assigned, estimated hours & its cost, Test Lead & Tester Assigned, Engagement Status among others. 
+•	The tool creates and sends an email to Resource manager and tracking team once a project is moved to Engaged Status with detailed information about the project.
+
+
+Non Accenture projects
+EMC  -  Functional Tester				September 2009 – June 2010
+•	Hands on experienced on SAN & NAS Technologies, testing conducted via command line interface with data structure analysis.
+•	Software & Hardware testing of layer drivers for the Clarrion Family.
+•	Performing activities as a Mentor for the new testers who just joined the project.
+•	Defects Management, Report & tracking issues.
+•	Experience with Test Cases, Test Matrix.
+
+Luguer (Aguascaliente – Monterrey) 				Aug 2008 – Sep 2009
+Sales Representative & office manager.
+•	Sales, staff management, monitoring infrastructure projects, volumetric, market expansions, prospecting for customers.
+•	Invoicing, Quotation & Forecasting.
+•	Tracking of purchase orders.
+•	Customer Service & Customer tracking.
+Maintenance and re-structuring company's Web Site
+
+
+<- - WS - ->
+What is a DTD?
+A DTD is a Document Type Definition.
+A DTD defines the structure and the legal elements and attributes of an XML document
+Independent groups of people can agree on a standard DTD for interchanging data.
+An application can use a DTD to verify that XML data is valid.
+
+ XML WSDL 
+•	WSDL stands for Web Services Description Language
+•	WSDL is used to describe web services
+•	WSDL is written in XML
+
+<- - RESTFUL - ->
+
+RESTful systems typically, communicate over HTTP.  These can be manipulated using basic CRUD operations (create, retrieve, update, and delete) for the Web. PUT, GET, POST, and DELETE
+
+RESTful API HTTP methods 
+Resource	GET	PUT	POST	DELETE
+Collection URI, such as
+http://api.example.com/v1/resources/	List the URIs and perhaps other details of the collection's members.	Replace the entire collection with another collection.	Create a new entry in the collection. The new entry's URI is assigned automatically and is usually returned by the operation. 	Delete the entire collection.
+Element URI, such as
+http://api.example.com/v1/resources/item17	Retrieve a representation of the addressed member of the collection, expressed in an appropriate Internet media type.	Replace the addressed member of the collection, or if it does not exist, create it.	Not generally used. Treat the addressed member as a collection in its own right and create a new entry in it. 	Delete the addressed member of the collection.
+
+
+<- - JASON - ->
+
+JSON: JavaScript Object Notation.
+JSON is a syntax for storing and exchanging data.
+JSON is an easier-to-use alternative to XML.
+What is JSON?
+•	JSON stands for JavaScript Object Notation.
+•	JSON is a lightweight data-interchange format.
+•	JSON is language independent *
+•	JSON is "self-describing" and easy to understand.
+
+The JSON format is syntactically identical to the code for creating JavaScript objects.
+•	Because of this similarity, instead of using a parser (like XML does), a JavaScript program can use standard JavaScript functions to convert JSON data into native JavaScript objects.
+{"employees":[
+    {"firstName":"John", "lastName":"Doe"},
+    {"firstName":"Anna", "lastName":"Smith"},
+    {"firstName":"Peter", "lastName":"Jones"}
+]}
+
+•	JSON doesn't use end tag
+•	JSON is shorter
+•	JSON is quicker to read and write
+•	JSON can use arrays
+
+XML has to be parsed with an XML parser, JSON can be parsed by a standard JavaScript function
+
+Why JSON?
+For AJAX applications, JSON is faster and easier than XML:
+Using XML
+•	Fetch an XML document
+•	Use the XML DOM to loop through the document
+•	Extract values and store in variables
+Using JSON
+•	Fetch a JSON string
+•	JSON.Parse the JSON string
+o	var obj = JSON.parse(text);
+NOTE:  Using eval() Older browsers without the support for the JavaScript function JSON.parse() can use the eval() function to convert a JSON text into a JavaScript object:
+JSON Syntax Rules
+•	Data is in name/value pairs
+•	Data is separated by commas
+•	Curly braces hold objects
+•	Square brackets hold arrays
+ARRAY “NAME”:[
+Object1{“name”:value, “age”:value. . . . },
+Object2{“name”:value, “age”:value. . . . },
+.
+.
+.]
+
+Sanity testing: 
+A sanity test or sanity check is a basic test to quickly evaluate whether a claim or the result of a calculation can possibly be true. It is a simple check to see if the produced material is rational (that the material's creator was thinking rationally, applying sanity). The point of a sanity test is to rule out certain classes of obviously false results, not to catch every possible error.
+
+How to look for a Service in a server*****
+Server – IIS (if it’s Win server) – look if it has console env or if not you need look for it in the code.
+Linux Serv ( WebMethods) -> OOS side.
